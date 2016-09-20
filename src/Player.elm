@@ -23,20 +23,20 @@ tick timeDelta mouse window player =
       ( mouse.x - window.width  // 2 |> toFloat
       , mouse.y - window.height // 2 |> toFloat
       )
-    rotation = Debug.log "rotation" <| calcRotation mouse' player.position
-    -- rotationDelta = rotation - player.rotation
-    -- rotation' = player.rotation + rotationDelta * timeDelta * 10
+    rotation = calcRotation mouse' player.position
+    rotation' = abs (2 * pi - rotation) -- clockwise
+    rotationDelta = rotation' - player.rotation
+    rotation'' = player.rotation + rotationDelta * timeDelta * 10
   in
     { player
     | position = position
     , velocity = velocity
-    , rotation = rotation
+    , rotation = rotation''
     }
 
 calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
-  let theta = atan2 (x - x') (y - y')
-  in theta + pi
+  atan2 (x - x') (y - y') + pi
 
 draw : Player -> Form
 draw player =
