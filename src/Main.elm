@@ -118,7 +118,7 @@ update msg model =
 tick : Float -> Model -> Model
 tick timeDelta model =
   let
-    cd = 0.3
+    cd = 0.1
     foods = Food.tick timeDelta model.foods
     player = Player.tick timeDelta model.mouse model.window model.player
     bullets = Bullets.tick timeDelta model.bullets
