@@ -12,7 +12,7 @@ import Mouse exposing (Position)
 import Bullets exposing (Bullet)
 import Player exposing (Player)
 import Food exposing (Food)
-import KeyStates exposing (KeyStates)
+import Keys exposing (Keys)
 
 main : Program Never
 main =
@@ -29,7 +29,7 @@ type alias Model =
   , bullets : List Bullet
   , fireCooldown : Float
   , foods : List Food
-  , keys : KeyStates
+  , keys : Keys
   , window : Size
   , mouse : Position
   }
@@ -97,10 +97,10 @@ update msg model =
       tick (inSeconds timeDelta) model
 
     KeyDown keyCode ->
-      { model | keys = KeyStates.pressed keyCode model.keys }
+      { model | keys = Keys.update keyCode model.keys }
 
     KeyUp keyCode ->
-      { model | keys = KeyStates.released keyCode model.keys }
+      { model | keys = Keys.update -keyCode model.keys }
 
     WindowResize size ->
       { model
