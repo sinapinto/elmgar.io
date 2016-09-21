@@ -23,20 +23,33 @@ tick timeDelta mouse window player =
       ( mouse.x - window.width  // 2 |> toFloat
       , mouse.y - window.height // 2 |> toFloat
       )
-    rotation = calcRotation mouse' player.position
-    rotation' = abs (2 * pi - rotation) -- clockwise
-    rotationDelta = rotation' - player.rotation
-    rotation'' = player.rotation + rotationDelta * timeDelta * 10
+    angle = abs <| 2 * pi - (calcAngle mouse' player.position)
+    rotation = calcRotation player.rotation angle timeDelta
   in
     { player
     | position = position
     , velocity = velocity
-    , rotation = rotation''
+    , rotation = rotation
     }
 
-calcRotation : (Float, Float) -> (Float, Float) -> Float
-calcRotation (x, y) (x', y') =
+calcAngle : (Float, Float) -> (Float, Float) -> Float
+calcAngle (x, y) (x', y') =
   atan2 (x - x') (y - y') + pi
+
+calcRotation : Float -> Float -> Float -> Float
+calcRotation old new timeDelta =
+  let
+    delta = new - old
+    delta' =
+      if abs delta > pi
+      then delta + 2 * pi
+      else delta
+    result = old + (delta' * 30 * timeDelta)
+  in
+    if result > 2 * pi
+    then result - 2 * pi
+    else result
+
 
 draw : Player -> Form
 draw player =
