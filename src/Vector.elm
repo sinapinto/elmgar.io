@@ -43,4 +43,4 @@ rotate angle vector =
     c = cos angle
     s = sin angle
   in
-    (y*s + x*c, y*c - x*s)
+    (x*c - y*s, x*s + y*c)

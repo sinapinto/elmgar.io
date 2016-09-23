@@ -19,12 +19,11 @@ tick timeDelta mouse window player =
     velocity =
       (0, 50 * timeDelta)
       |> rotate player.rotation
-    mouse' =
-      ( mouse.x - window.width  // 2 |> toFloat
-      , mouse.y - window.height // 2 |> toFloat
-      )
-    newRotation = abs <| 2 * pi - (calcRotation mouse' player.position)
-    rotation = calcRotationStep player.rotation newRotation timeDelta
+    rotation =
+      mouse
+        |> moveOriginToCenter window
+        |> calcRotation player.position
+        |> calcRotationStep timeDelta player.rotation
   in
     { player
     | position = position
@@ -32,12 +31,18 @@ tick timeDelta mouse window player =
     , rotation = rotation
     }
 
+moveOriginToCenter : Size -> Position -> (Float, Float)
+moveOriginToCenter window mouse =
+  ( mouse.x - window.width  // 2 |> toFloat
+  , mouse.y - window.height // 2 |> toFloat
+  )
+
 calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
-  atan2 (x - x') (y - y') + pi
+  atan2 (x' - x) (y' - y) + pi
 
 calcRotationStep : Float -> Float -> Float -> Float
-calcRotationStep old new timeDelta =
+calcRotationStep timeDelta old new =
   let
     delta = new - old
     delta' =
