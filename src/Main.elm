@@ -145,7 +145,7 @@ view model =
       [ rect (toFloat width) (toFloat height)
       |> filled black
       , Food.draw model.foods
-      , Player.draw model.player
+      , Player.draw model.player model.mouse model.window
       , Bullets.draw model.bullets
       ]
         |> Element.toHtml

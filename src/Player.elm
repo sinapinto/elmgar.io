@@ -1,6 +1,7 @@
 module Player exposing (draw, Player, tick)
 
-import Collage exposing (Form)
+import Collage exposing (Form, defaultLine, segment, traced)
+import Color exposing (..)
 import Mouse exposing (Position)
 import Window exposing (Size)
 import Vector exposing (..)
@@ -19,6 +20,7 @@ tick timeDelta mouse window player =
     velocity =
       (0, 50 * timeDelta)
       |> rotate player.rotation
+      |> (*>) 100
     rotation =
       mouse
         |> moveOriginToCenter window
@@ -33,13 +35,13 @@ tick timeDelta mouse window player =
 
 moveOriginToCenter : Size -> Position -> (Float, Float)
 moveOriginToCenter window mouse =
-  ( mouse.x - window.width  // 2 |> toFloat
-  , mouse.y - window.height // 2 |> toFloat
+  ( toFloat <| mouse.x - (window.width // 2)
+  , toFloat <| (window.height - mouse.y) - (window.height // 2)
   )
 
 calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
-  atan2 (x' - x) (y' - y) + pi
+  atan2 (x' - x) (y' - y)
 
 calcRotationStep : Float -> Float -> Float -> Float
 calcRotationStep timeDelta old new =
@@ -55,6 +57,10 @@ calcRotationStep timeDelta old new =
     else if result < 0 then result + 2 * pi
     else result
 
-draw : Player -> Form
-draw player =
-  Ship.draw player.position player.rotation
+draw : Player -> Position -> Size -> Form
+draw player mouse window =
+  [ Ship.draw player.position player.rotation
+  , segment player.position (moveOriginToCenter window mouse)
+  |> traced { defaultLine | color = red }
+  ]
+    |> Collage.group

@@ -26,7 +26,6 @@ vectorOp op (x, y) (x2, y2) =
 (</>) : Vector -> Vector -> Vector
 (</>) =  vectorOp (/)
 
-
 scalarOp : (Float -> Float -> Float) -> Float -> Vector -> Vector
 scalarOp op scalar (x, y) =
   ( scalar `op` x
@@ -43,4 +42,4 @@ rotate angle vector =
     c = cos angle
     s = sin angle
   in
-    (x*c - y*s, x*s + y*c)
+    (y*s + x*c, y*c - x*s)
