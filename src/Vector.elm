@@ -1,4 +1,4 @@
-module Vector exposing (Vector, (<+>), (<->), (<*>), (</>), (*>), rotate)
+module Vector exposing (Vector, (<+>), (<->), (<*>), (</>), (*>), rotate, distance)
 
 type alias Vector = (Float, Float)
 
@@ -43,3 +43,7 @@ rotate angle vector =
     s = sin angle
   in
     (y*s + x*c, y*c - x*s)
+
+distance : Vector -> Vector -> Float
+distance (x, y) (x', y') =
+  sqrt <| (x' - x) ^ 2 + (y' - y) ^ 2

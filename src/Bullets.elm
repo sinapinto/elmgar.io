@@ -1,7 +1,7 @@
 module Bullets exposing (Bullet, fire, tick, draw)
 
 import Collage exposing (Form, filled, circle, move, group)
-import Color exposing (rgb)
+import Color exposing (..)
 import List exposing (map, filterMap)
 import Vector exposing (..)
 import Player exposing (Player)
@@ -49,5 +49,5 @@ draw = group << map drawBullet
 drawBullet : Bullet -> Form
 drawBullet bullet =
   circle 2
-    |> filled (rgb 255 255 255)
+    |> filled white
     |> move bullet.position

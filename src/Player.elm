@@ -17,13 +17,13 @@ tick : Float -> Position -> Size -> Player -> Player
 tick timeDelta mouse window player =
   let
     position = player.position <+> (timeDelta *> player.velocity)
+    mouse' = moveOriginToCenter window mouse
     velocity =
       (0, 50 * timeDelta)
       |> rotate player.rotation
-      |> (*>) 100
+      |> (*>) (calcVelocity (distance player.position mouse'))
     rotation =
-      mouse
-        |> moveOriginToCenter window
+      mouse'
         |> calcRotation player.position
         |> calcRotationStep timeDelta player.rotation
   in
@@ -38,6 +38,10 @@ moveOriginToCenter window mouse =
   ( toFloat <| mouse.x - (window.width // 2)
   , toFloat <| (window.height - mouse.y) - (window.height // 2)
   )
+
+calcVelocity : Float -> Float
+calcVelocity distance =
+  min 200 (distance * 2)
 
 calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
