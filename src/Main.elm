@@ -31,7 +31,7 @@ type alias Model =
   , foods : List Food
   , keys : Keys
   , window : Size
-  , mouse : Position
+  , mouse : (Float, Float)
   }
 
 init : (Model, Cmd Msg)
@@ -46,17 +46,9 @@ init =
   , bullets = []
   , fireCooldown = 0
   , foods = []
-  , keys =
-    { space = False
-    }
-  , window =
-    { width = 0
-    , height = 0
-    }
-  , mouse =
-    { x = 0
-    , y = 0
-    }
+  , keys = { space = False }
+  , window = { width = 0, height = 0 }
+  , mouse = (0, 0)
   }
   (Cmd.batch
     [ Task.perform NoOp Init Time.now
@@ -101,8 +93,15 @@ update msg model =
     WindowResize size ->
       { model | window = size }
 
-    MouseMove position ->
-      { model | mouse = position }
+    MouseMove { x, y } ->
+      let
+        (width, height) = (model.window.width, model.window.height)
+        mouse =
+          ( toFloat <| x - width // 2
+          , toFloat <| (height - y) - height // 2
+          )
+      in
+        { model | mouse = mouse }
 
     NoOp _ ->
       model
@@ -112,7 +111,7 @@ tick timeDelta model =
   let
     cd = 0.1
     foods = Food.tick timeDelta model.foods
-    player = Player.tick timeDelta model.mouse model.window model.player
+    player = Player.tick timeDelta model.mouse model.player
     bullets = Bullets.tick timeDelta model.bullets
     (bullets', fireCooldown) =
       if model.keys.space && model.fireCooldown == 0 then
@@ -137,7 +136,7 @@ view model =
       [ rect (toFloat width) (toFloat height)
       |> filled black
       , Food.draw model.foods
-      , Player.draw model.player model.mouse model.window
+      , Player.draw model.player model.mouse
       , Bullets.draw model.bullets
       ]
         |> Element.toHtml

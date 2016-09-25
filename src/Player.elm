@@ -2,8 +2,6 @@ module Player exposing (draw, Player, tick)
 
 import Collage exposing (Form, defaultLine, segment, traced)
 import Color exposing (..)
-import Mouse exposing (Position)
-import Window exposing (Size)
 import Vector exposing (..)
 import Ship
 
@@ -13,17 +11,16 @@ type alias Player =
   , rotation : Float
   }
 
-tick : Float -> Position -> Size -> Player -> Player
-tick timeDelta mouse window player =
+tick : Float -> (Float, Float) -> Player -> Player
+tick timeDelta mouse player =
   let
     position = player.position <+> (timeDelta *> player.velocity)
-    mouse' = moveOriginToCenter window mouse
     velocity =
       (0, 50 * timeDelta)
-      |> rotate player.rotation
-      |> (*>) (calcVelocity (distance player.position mouse'))
+        |> rotate player.rotation
+        |> (*>) (calcVelocity (distance player.position mouse))
     rotation =
-      mouse'
+      mouse
         |> calcRotation player.position
         |> calcRotationStep timeDelta player.rotation
   in
@@ -32,12 +29,6 @@ tick timeDelta mouse window player =
     , velocity = velocity
     , rotation = rotation
     }
-
-moveOriginToCenter : Size -> Position -> (Float, Float)
-moveOriginToCenter window mouse =
-  ( toFloat <| mouse.x - (window.width // 2)
-  , toFloat <| (window.height - mouse.y) - (window.height // 2)
-  )
 
 calcVelocity : Float -> Float
 calcVelocity distance =
@@ -61,10 +52,10 @@ calcRotationStep timeDelta old new =
     else if result < 0 then result + 2 * pi
     else result
 
-draw : Player -> Position -> Size -> Form
-draw player mouse window =
+draw : Player -> (Float, Float) -> Form
+draw player mouse =
   [ Ship.draw player.position player.rotation
-  , segment player.position (moveOriginToCenter window mouse)
+  , segment player.position mouse
   |> traced { defaultLine | color = red }
   ]
     |> Collage.group
