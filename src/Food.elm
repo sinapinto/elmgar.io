@@ -16,7 +16,7 @@ init randomInt bounds =
   let
     (left, right) = (toFloat -bounds.width/2, toFloat bounds.width/2)
     (bottom, top) = (toFloat -bounds.height/2, toFloat bounds.height/2)
-    generator = map2 (,) (float left right) (float bottom top) |> list 3
+    generator = map2 (,) (float left right) (float bottom top) |> list 10
     (randoms, seed) = step generator (initialSeed randomInt)
   in
     map initFood randoms

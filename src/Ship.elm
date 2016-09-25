@@ -21,11 +21,11 @@ draw : Vector -> Float -> Form
 draw position rotation =
   let
     shape =
-      [ front position rotation
-      , left position rotation
-      , right position rotation
-      ]
-        |> polygon
+      polygon
+        [ front position rotation
+        , left position rotation
+        , right position rotation
+        ]
   in
     [ shape
     |> filled green

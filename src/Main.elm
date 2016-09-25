@@ -12,6 +12,7 @@ import Mouse exposing (Position)
 import Bullets exposing (Bullet)
 import Player exposing (Player)
 import Food exposing (Food)
+import World exposing (World)
 import Keys exposing (Keys)
 
 main : Program Never
@@ -30,35 +31,31 @@ type alias Model =
   , fireCooldown : Float
   , foods : List Food
   , keys : Keys
-  , window : Size
   , mouse : (Float, Float)
+  , window : Size
+  , world : World
   }
 
 init : (Model, Cmd Msg)
 init =
-  (,)
   { seed = 0
-  , player =
-    { position = (0, 0)
-    , velocity = (0, 0)
-    , rotation = 0
-    }
+  , player = { position = (0, 0), velocity = (0, 0), rotation = 0 }
   , bullets = []
   , fireCooldown = 0
   , foods = []
   , keys = { space = False }
-  , window = { width = 0, height = 0 }
   , mouse = (0, 0)
+  , window = { width = 0, height = 0 }
+  , world = { position = (0, 0) }
   }
-  (Cmd.batch
-    [ Task.perform NoOp Init Time.now
-    , Task.perform NoOp WindowResize Window.size
-    ])
+  ! [ Task.perform (always NoOp) Init Time.now
+    , Task.perform (always NoOp) WindowResize Window.size
+    ]
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
-    [ AnimationFrame.diffs Tick
+    [ AnimationFrame.diffs (inSeconds >> Tick)
     , Keyboard.downs Key
     , Keyboard.ups (negate >> Key)
     , Window.resizes WindowResize
@@ -71,7 +68,7 @@ type Msg
   | Key Int
   | WindowResize Size
   | MouseMove Position
-  | NoOp Time
+  | NoOp
 
 update : Msg -> Model -> Model
 update msg model =
@@ -85,7 +82,7 @@ update msg model =
         }
 
     Tick timeDelta ->
-      tick (inSeconds timeDelta) model
+      tick timeDelta model
 
     Key keyCode ->
       { model | keys = Keys.update keyCode model.keys }
@@ -103,13 +100,14 @@ update msg model =
       in
         { model | mouse = mouse }
 
-    NoOp _ ->
+    NoOp ->
       model
 
 tick : Float -> Model -> Model
 tick timeDelta model =
   let
     cd = 0.1
+    world = World.tick timeDelta model.player model.world
     foods = Food.tick timeDelta model.foods
     player = Player.tick timeDelta model.mouse model.player
     bullets = Bullets.tick timeDelta model.bullets
@@ -124,6 +122,7 @@ tick timeDelta model =
     , bullets = bullets'
     , fireCooldown = fireCooldown
     , foods = foods
+    , world = world
     }
 
 view : Model -> Html Msg
@@ -131,11 +130,13 @@ view model =
   let
     width = model.window.width
     height = model.window.height
+    (x, y) = model.world.position
   in
     collage width height
       [ rect (toFloat width) (toFloat height)
       |> filled black
-      , Food.draw model.foods
+      -- , World.draw model.world
+      , Food.draw model.foods |> move (-x, -y)
       , Player.draw model.player model.mouse
       , Bullets.draw model.bullets
       ]

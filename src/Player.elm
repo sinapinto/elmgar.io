@@ -14,25 +14,29 @@ type alias Player =
 tick : Float -> (Float, Float) -> Player -> Player
 tick timeDelta mouse player =
   let
-    position = player.position <+> (timeDelta *> player.velocity)
+    -- position =
+    --   player.position <+> (timeDelta *> player.velocity)
+    --     |> limitRadius 20
+
     velocity =
       (0, 50 * timeDelta)
         |> rotate player.rotation
-        |> (*>) (calcVelocity (distance player.position mouse))
+        |> (*>) (distance player.position mouse |> min 200)
+
     rotation =
       mouse
         |> calcRotation player.position
         |> calcRotationStep timeDelta player.rotation
   in
     { player
-    | position = position
-    , velocity = velocity
+    | velocity = velocity
     , rotation = rotation
     }
 
-calcVelocity : Float -> Float
-calcVelocity distance =
-  min 200 (distance * 2)
+-- limitRadius : Float -> Vector -> Vector
+-- limitRadius limit point =
+--   let (r, t) = toPolar point
+--   in fromPolar (min r limit, t)
 
 calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
