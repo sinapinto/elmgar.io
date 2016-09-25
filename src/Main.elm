@@ -67,8 +67,8 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ AnimationFrame.diffs Tick
-    , Keyboard.downs KeyDown
-    , Keyboard.ups KeyUp
+    , Keyboard.downs Key
+    , Keyboard.ups (negate >> Key)
     , Window.resizes WindowResize
     , Mouse.moves MouseMove
     ]
@@ -76,8 +76,7 @@ subscriptions model =
 type Msg
   = Init Time
   | Tick Time
-  | KeyUp Int
-  | KeyDown Int
+  | Key Int
   | WindowResize Size
   | MouseMove Position
   | NoOp Time
@@ -96,21 +95,14 @@ update msg model =
     Tick timeDelta ->
       tick (inSeconds timeDelta) model
 
-    KeyDown keyCode ->
+    Key keyCode ->
       { model | keys = Keys.update keyCode model.keys }
 
-    KeyUp keyCode ->
-      { model | keys = Keys.update -keyCode model.keys }
-
     WindowResize size ->
-      { model
-      | window = size
-      }
+      { model | window = size }
 
     MouseMove position ->
-      { model
-      | mouse = position
-      }
+      { model | mouse = position }
 
     NoOp _ ->
       model
