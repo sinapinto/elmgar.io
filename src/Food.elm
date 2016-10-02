@@ -13,6 +13,9 @@ type alias Food =
   , color : (Color, Color)
   }
 
+radius : Float
+radius = 8
+
 init : Int -> Size -> List Food
 init randomInt bounds =
   let
@@ -20,16 +23,20 @@ init randomInt bounds =
     (bottom, top) = (toFloat -bounds.height / 2, toFloat bounds.height / 2)
 
     generator =
-      map3 (\a b c -> (a, b, c)) (float left right) (float bottom top) (int 0 Colors.max)
+      map3
+        (\a b c -> (a, b, c))
+        (float left right)
+        (float bottom top)
+        (int 0 Colors.max)
         |> list 5
     (randoms, _) = step generator (initialSeed randomInt)
   in
     List.map initFood randoms
 
 initFood : (Float, Float, Int) -> Food
-initFood (x, y, c) =
+initFood (x, y, colorIndex) =
   { position = (x, y)
-  , color = getColor c
+  , color = getColor colorIndex
   }
 
 tick : Float -> List Food -> List Food
@@ -44,10 +51,10 @@ draw = group << List.map drawFood
 
 drawFood : Food -> Form
 drawFood food =
-  [ ngon 7 8
+  [ circle radius
   |> filled (fst food.color)
   |> move food.position
-  , ngon 7 8
+  , circle radius
   |> outlined { defaultLine | color = (snd food.color), width = 3 }
   |> move food.position
   ]

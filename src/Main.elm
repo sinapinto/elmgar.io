@@ -14,6 +14,7 @@ import Food exposing (Food)
 import World exposing (World)
 import Keys exposing (Keys)
 import Colors exposing (bg)
+import Collision exposing (collide)
 
 main : Program Never
 main =
@@ -117,12 +118,13 @@ tick timeDelta model =
         (Bullets.fire model.player model.world.position bullets, cd)
       else
         (bullets, max 0 (model.fireCooldown - timeDelta))
+    (bullets'', foods') = collide bullets' foods
   in
     { model
     | player = player
-    , bullets = bullets'
+    , bullets = bullets''
     , fireCooldown = fireCooldown
-    , foods = foods
+    , foods = foods'
     , world = world
     }
 
@@ -136,7 +138,6 @@ view model =
     collage width height
       [ rect (toFloat width) (toFloat height)
       |> filled bg
-      -- , World.draw model.world
       , Food.draw model.foods |> move (-x, -y)
       , Bullets.draw model.player.colors model.bullets |> move (-x, -y)
       , Player.draw model.player model.mouse

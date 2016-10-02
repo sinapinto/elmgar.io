@@ -9,13 +9,13 @@ reposition point position rotation =
   position <+> (Vector.rotate rotation point)
 
 front : Vector -> Float -> Vector
-front = reposition (0, 28)
+front = reposition (0, 22)
 
 left : Vector -> Float -> Vector
-left = reposition (-20, -16)
+left = reposition (-16, -16)
 
 right : Vector -> Float -> Vector
-right = reposition (20, -16)
+right = reposition (16, -16)
 
 draw : Vector -> Float -> (Color, Color) -> Form
 draw position rotation colors =

@@ -1,4 +1,4 @@
-module World exposing (World, tick, draw, writeVector)
+module World exposing (World, tick, writeVector)
 
 import Collage exposing (..)
 import Color exposing (..)
@@ -7,20 +7,11 @@ import Player exposing (Player)
 import Vector exposing (..)
 
 type alias World =
-  { position : Vector
-  }
+  { position : Vector }
 
 tick : Float -> Player -> World -> World
 tick timeDelta player world =
-  let position = world.position <+> (timeDelta *> player.velocity)
-  in
-    { position = position
-    }
-
-draw : World -> Form
-draw world =
-  writeVector world.position
-    |> move (-500, 200)
+  { position = world.position <+> (timeDelta *> player.velocity) }
 
 writeVector : Vector -> Form
 writeVector vec =

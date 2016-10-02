@@ -1,71 +1,74 @@
-module Colors exposing (..)
+module Colors exposing (max, getColor, bg)
 
 import Color exposing (..)
 
-bg : Color
-bg = rgb 242 251 255
--- bg = rgb 9 9 9
-
-pink : Color
-pink = rgb 232 5 153
-
-darkPink : Color
-darkPink = rgb 215 6 142
-
-cyan : Color
-cyan = rgb 7 214 255
-
-darkCyan : Color
-darkCyan = rgb 6 192 229
-
-red : Color
-red = rgb 244 6 47
-
-darkRed : Color
-darkRed = rgb 220 5 42
-
-green : Color
-green = rgb 104 255  7
-
-darkGreen : Color
-darkGreen = rgb 93 229 6
-
-teal : Color
-teal = rgb 7 197 255
-
-darkTeal : Color
-darkTeal = rgb 6 177 229
-
-redOrange : Color
-redOrange = rgb 255 61 7
-
-darkRedOrange : Color
-darkRedOrange = rgb 229 54 6
-
-lime : Color
-lime = rgb 173 255 7
-
-darkLime : Color
-darkLime = rgb 155 229 6
-
-purple : Color
-purple = rgb 180 6 22
-
-darkPurple : Color
-darkPurple = rgb 84 6 234
+max : Int
+max = 14
 
 getColor : Int -> (Color, Color)
 getColor i =
   case i of
-    0 -> (pink, darkPink)
-    1 -> (cyan, darkCyan)
-    2 -> (red, darkRed)
-    3 -> (green, darkGreen)
-    4 -> (teal, darkTeal)
-    5 -> (redOrange, darkRedOrange)
-    6 -> (lime, darkLime)
-    7 -> (purple, darkPurple)
-    _ -> (purple, darkPurple)
+    0 -> pink
+    1 -> cyan
+    2 -> red
+    3 -> green
+    4 -> teal
+    5 -> redOrange
+    6 -> lime
+    7 -> lightPurple
+    8 -> purple
+    9 -> gold
+    10 -> yellow
+    11 -> orange
+    12 -> blue
+    13 -> darkBlue
+    14 -> neonBlue
+    _ -> (black, black)
 
-max : Int
-max = 7
+bg : Color
+bg = rgb 242 251 255
+
+pink : (Color, Color)
+pink = (rgb 232 5 153, rgb 215 6 142)
+
+cyan : (Color, Color)
+cyan = (rgb 7 214 255, rgb 6 192 229)
+
+red : (Color, Color)
+red = (rgb 244 6 47, rgb 220 5 42)
+
+green : (Color, Color)
+green = (rgb 104 255  7, rgb 93 229 6)
+
+teal : (Color, Color)
+teal = (rgb 7 197 255, rgb 6 177 229)
+
+redOrange : (Color, Color)
+redOrange = (rgb 255 61 7, rgb 229 54 6)
+
+lime : (Color, Color)
+lime = (rgb 173 255 7, rgb 155 229 6)
+
+lightPurple : (Color, Color)
+lightPurple = (rgb 217 7 255, rgb 195 6 229)
+
+purple : (Color, Color)
+purple = (rgb 180 6 22, rgb 180 6 22)
+
+gold : (Color, Color)
+gold = (rgb 255 205 7, rgb 229 184 6)
+
+yellow : (Color, Color)
+yellow = (rgb 220 255 7, rgb 198 229 6)
+
+orange : (Color, Color)
+orange = (rgb 255 78 7, rgb 229 70 6)
+
+blue : (Color, Color)
+blue = (rgb 7 81 255, rgb 6 72 229)
+
+darkBlue : (Color, Color)
+darkBlue = (rgb 26 7 255, rgb 23 6 229)
+
+neonBlue: (Color, Color)
+neonBlue = (rgb 7 243 255, rgb 7 243 255)
