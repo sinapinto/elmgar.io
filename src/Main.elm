@@ -5,7 +5,6 @@ import Collage exposing (..)
 import Time exposing (Time, inSeconds, inMilliseconds, now)
 import Task
 import AnimationFrame
-import Color exposing (..)
 import Keyboard
 import Window exposing (Size)
 import Mouse exposing (Position)
@@ -14,6 +13,7 @@ import Player exposing (Player)
 import Food exposing (Food)
 import World exposing (World)
 import Keys exposing (Keys)
+import Colors exposing (bg)
 
 main : Program Never
 main =
@@ -39,7 +39,7 @@ type alias Model =
 init : (Model, Cmd Msg)
 init =
   { seed = 0
-  , player = { position = (0, 0), velocity = (0, 0), rotation = 0 }
+  , player = { position = (0, 0), velocity = (0, 0), rotation = 0, colors = (bg, bg) }
   , bullets = []
   , fireCooldown = 0
   , foods = []
@@ -79,6 +79,7 @@ update msg model =
         { model
         | seed = seed
         , foods = Food.init seed model.window
+        , player = Player.init seed model.player
         }
 
     Tick timeDelta ->
@@ -106,14 +107,14 @@ update msg model =
 tick : Float -> Model -> Model
 tick timeDelta model =
   let
-    cd = 0.1
+    cd = 0.2
     world = World.tick timeDelta model.player model.world
     foods = Food.tick timeDelta model.foods
     player = Player.tick timeDelta model.mouse model.player
     bullets = Bullets.tick timeDelta model.bullets
     (bullets', fireCooldown) =
       if model.keys.space && model.fireCooldown == 0 then
-        (Bullets.fire model.player bullets, cd)
+        (Bullets.fire model.player model.world.position bullets, cd)
       else
         (bullets, max 0 (model.fireCooldown - timeDelta))
   in
@@ -134,10 +135,10 @@ view model =
   in
     collage width height
       [ rect (toFloat width) (toFloat height)
-      |> filled black
+      |> filled bg
       -- , World.draw model.world
       , Food.draw model.foods |> move (-x, -y)
+      , Bullets.draw model.player.colors model.bullets |> move (-x, -y)
       , Player.draw model.player model.mouse
-      , Bullets.draw model.bullets
       ]
         |> Element.toHtml

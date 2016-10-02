@@ -1,4 +1,4 @@
-module World exposing (World, tick, draw)
+module World exposing (World, tick, draw, writeVector)
 
 import Collage exposing (..)
 import Color exposing (..)
@@ -19,16 +19,16 @@ tick timeDelta player world =
 
 draw : World -> Form
 draw world =
-  let (x, y) = (round (fst world.position), round (snd world.position))
-  in
-    [ write ("(" ++ toString x ++ ", " ++ toString y ++ ")")
+  writeVector world.position
     |> move (-500, 200)
-    ]
-      |> group
 
-write : String -> Form
-write text =
-  text
-    |> Text.fromString
-    |> Text.style { defaultStyle | color = white, bold = True }
-    |> Collage.text 
+writeVector : Vector -> Form
+writeVector vec =
+  let
+    (x, y) = (round (fst vec), round (snd vec))
+    text = "(" ++ toString x ++ ", " ++ toString y ++ ")"
+  in
+    text
+      |> Text.fromString
+      |> Text.style { defaultStyle | color = black, bold = True }
+      |> Collage.text 

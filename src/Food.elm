@@ -1,43 +1,54 @@
 module Food exposing (Food, init, tick, draw)
 
 import Collage exposing (..)
-import Color exposing (red)
-import Random exposing (step, float, map2, list, initialSeed)
-import List exposing (map)
+import Colors exposing (..)
+import Color exposing (Color)
+import Random exposing (..)
+import List
 import Window exposing (Size)
 import Vector exposing (..)
 
 type alias Food =
   { position : Vector
+  , color : (Color, Color)
   }
 
 init : Int -> Size -> List Food
 init randomInt bounds =
   let
-    (left, right) = (toFloat -bounds.width/2, toFloat bounds.width/2)
-    (bottom, top) = (toFloat -bounds.height/2, toFloat bounds.height/2)
-    generator = map2 (,) (float left right) (float bottom top) |> list 10
-    (randoms, seed) = step generator (initialSeed randomInt)
-  in
-    map initFood randoms
+    (left, right) = (toFloat -bounds.width / 2, toFloat bounds.width / 2)
+    (bottom, top) = (toFloat -bounds.height / 2, toFloat bounds.height / 2)
 
-initFood : (Float, Float) -> Food
-initFood position =
-  { position = position
+    generator =
+      map3 (\a b c -> (a, b, c)) (float left right) (float bottom top) (int 0 Colors.max)
+        |> list 5
+    (randoms, _) = step generator (initialSeed randomInt)
+  in
+    List.map initFood randoms
+
+initFood : (Float, Float, Int) -> Food
+initFood (x, y, c) =
+  { position = (x, y)
+  , color = getColor c
   }
 
 tick : Float -> List Food -> List Food
-tick timeDelta = map (tickFood timeDelta)
+tick timeDelta = List.map (tickFood timeDelta)
 
 tickFood : Float -> Food -> Food
 tickFood timeDelta food =
   food
 
 draw : List Food -> Form
-draw = group << map drawFood
+draw = group << List.map drawFood
 
 drawFood : Food -> Form
 drawFood food =
-    circle 4
-      |> filled red
-      |> move food.position
+  [ ngon 7 8
+  |> filled (fst food.color)
+  |> move food.position
+  , ngon 7 8
+  |> outlined { defaultLine | color = (snd food.color), width = 3 }
+  |> move food.position
+  ]
+    |> group

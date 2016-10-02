@@ -1,15 +1,28 @@
-module Player exposing (draw, Player, tick)
+module Player exposing (Player, init, draw, tick)
 
 import Collage exposing (Form, defaultLine, segment, traced)
-import Color exposing (..)
+import Color exposing (Color)
+import Random exposing (..)
 import Vector exposing (..)
+import Colors
 import Ship
 
 type alias Player =
   { position : Vector
   , velocity : Vector
   , rotation : Float
+  , colors : (Color, Color)
   }
+
+init : Int -> Player -> Player
+init randomInt player =
+  let
+    generator = int 0 Colors.max
+    (num, _) = step generator (initialSeed randomInt)
+  in
+    { player
+    | colors = Colors.getColor num
+    }
 
 tick : Float -> (Float, Float) -> Player -> Player
 tick timeDelta mouse player =
@@ -19,9 +32,9 @@ tick timeDelta mouse player =
     --     |> limitRadius 20
 
     velocity =
-      (0, 50 * timeDelta)
+      (0, 100 * timeDelta)
         |> rotate player.rotation
-        |> (*>) (distance player.position mouse |> min 200)
+        |> (*>) (distance player.position mouse |> min 100)
 
     rotation =
       mouse
@@ -58,8 +71,4 @@ calcRotationStep timeDelta old new =
 
 draw : Player -> (Float, Float) -> Form
 draw player mouse =
-  [ Ship.draw player.position player.rotation
-  , segment player.position mouse
-  |> traced { defaultLine | color = red }
-  ]
-    |> Collage.group
+  Ship.draw player.position player.rotation player.colors
