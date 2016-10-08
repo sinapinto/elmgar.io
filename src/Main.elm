@@ -114,7 +114,7 @@ tick timeDelta model =
     bullets = Bullets.tick timeDelta model.bullets
     (bullets', fireCooldown) =
       if model.keys.space && model.fireCooldown == 0 then
-        (Bullets.fire model.player model.world.position bullets, 0.2)
+        (Bullets.fire model.player model.world.position bullets, 0.3)
       else
         (bullets, max 0 (model.fireCooldown - timeDelta))
     (bullets'', foods') = collide bullets' foods

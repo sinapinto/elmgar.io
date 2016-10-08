@@ -54,15 +54,11 @@ draw colors = group << map (drawBullet colors)
 
 drawBullet : (Color, Color) -> Bullet -> Form
 drawBullet (c1, c2) bullet =
-  let
-    bw = 3
-    radius = bullet.radius - bw
-  in
-    [ circle radius
-    |> filled c1
-    |> move bullet.position
-    , circle radius
-    |> outlined { defaultLine | color = c2, width = bw }
-    |> move bullet.position
-    ]
-      |> group
+  [ circle bullet.radius
+  |> filled c1
+  |> move bullet.position
+  , circle bullet.radius
+  |> outlined { defaultLine | color = c2, width = 3 }
+  |> move bullet.position
+  ]
+    |> group

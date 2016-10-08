@@ -26,7 +26,7 @@ init randomInt bounds =
         (float left right)
         (float bottom top)
         (int 0 Colors.max)
-        |> list 20
+        |> list 10
     (randoms, _) = step generator (initialSeed randomInt)
   in
     List.map initFood randoms
@@ -50,15 +50,11 @@ draw = group << List.map drawFood
 
 drawFood : Food -> Form
 drawFood food =
-  let
-    bw = 3
-    radius = food.radius - bw
-  in
-    [ circle radius
-    |> filled (fst food.color)
-    |> move food.position
-    , circle radius
-    |> outlined { defaultLine | color = (snd food.color), width = bw }
-    |> move food.position
-    ]
-      |> group
+  [ circle food.radius
+  |> filled (fst food.color)
+  |> move food.position
+  , circle food.radius
+  |> outlined { defaultLine | color = (snd food.color), width = 3 }
+  |> move food.position
+  ]
+    |> group
