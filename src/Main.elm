@@ -137,6 +137,7 @@ view model =
     collage width height
       [ rect (toFloat width) (toFloat height)
       |> filled bg
+      , World.draw model.world model.window
       , Food.draw model.foods |> move (-x, -y)
       , Bullets.draw model.player.colors model.bullets |> move (-x, -y)
       , Player.draw model.player model.mouse
