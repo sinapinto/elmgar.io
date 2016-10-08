@@ -42,7 +42,7 @@ rotate angle vector =
     c = cos angle
     s = sin angle
   in
-    (y*s + x*c, y*c - x*s)
+    (y * s + x * c, y * c - x * s)
 
 distance : Vector -> Vector -> Float
 distance (x, y) (x', y') =

@@ -70,5 +70,5 @@ blue = (rgb 7 81 255, rgb 6 72 229)
 darkBlue : (Color, Color)
 darkBlue = (rgb 26 7 255, rgb 23 6 229)
 
-neonBlue: (Color, Color)
+neonBlue : (Color, Color)
 neonBlue = (rgb 7 243 255, rgb 7 243 255)

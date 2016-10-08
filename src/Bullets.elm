@@ -11,13 +11,11 @@ type alias Bullet =
   { position : Vector
   , velocity : Vector
   , expire : Float
+  , radius : Float
   }
 
 expire : Float
 expire = 3
-
-radius : Float
-radius = 5
 
 fire : Player -> Vector -> List Bullet -> List Bullet
 fire player world bullets =
@@ -25,6 +23,7 @@ fire player world bullets =
   , velocity = player.velocity
   |> (<+>) (rotate player.rotation (0, 160))
   , expire = expire
+  , radius = 5
   } :: bullets
 
 
@@ -38,8 +37,8 @@ moveBullet timeDelta bullet =
     position = bullet.position <+> (timeDelta *> bullet.velocity)
     expire = max 0 (bullet.expire - timeDelta)
   in
-    { position = position
-    , velocity = bullet.velocity
+    { bullet
+    | position = position
     , expire = expire
     }
 
@@ -55,11 +54,15 @@ draw colors = group << map (drawBullet colors)
 
 drawBullet : (Color, Color) -> Bullet -> Form
 drawBullet (c1, c2) bullet =
-  [ circle radius
-  |> filled c1
-  |> move bullet.position
-  , circle radius
-  |> outlined { defaultLine | color = c2, width = 3 }
-  |> move bullet.position
-  ]
-    |> group
+  let
+    bw = 3
+    radius = bullet.radius - bw
+  in
+    [ circle radius
+    |> filled c1
+    |> move bullet.position
+    , circle radius
+    |> outlined { defaultLine | color = c2, width = bw }
+    |> move bullet.position
+    ]
+      |> group
