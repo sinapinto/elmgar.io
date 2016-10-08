@@ -40,11 +40,17 @@ type alias Model =
 init : (Model, Cmd Msg)
 init =
   { seed = 0
-  , player = { position = (0, 0), velocity = (0, 0), rotation = 0, radius = 20, colors = (bg, bg) }
+  , player =
+    { position = (0, 0)
+    , velocity = (0, 0)
+    , rotation = 0
+    , radius = 20
+    , colors = (bg, bg)
+    }
   , bullets = []
   , fireCooldown = 0
   , foods = []
-  , keys = { space = False }
+  , keys = { space = False, w = False }
   , mouse = (0, 0)
   , window = { width = 0, height = 0 }
   , world = { position = (0, 0) }
@@ -113,11 +119,11 @@ tick timeDelta model =
     player = Player.tick timeDelta model.mouse model.player
     bullets = Bullets.tick timeDelta model.bullets
     (bullets', fireCooldown) =
-      if model.keys.space && model.fireCooldown == 0 then
+      if model.keys.w && model.fireCooldown == 0 then
         (Bullets.fire model.player model.world.position bullets, 0.3)
       else
         (bullets, max 0 (model.fireCooldown - timeDelta))
-    (bullets'', foods') = collide bullets' foods
+    (bullets'', foods') = collide world player bullets' foods
   in
     { model
     | player = player
