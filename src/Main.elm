@@ -40,7 +40,7 @@ type alias Model =
 init : (Model, Cmd Msg)
 init =
   { seed = 0
-  , player = { position = (0, 0), velocity = (0, 0), rotation = 0, colors = (bg, bg) }
+  , player = { position = (0, 0), velocity = (0, 0), rotation = 0, radius = 20, colors = (bg, bg) }
   , bullets = []
   , fireCooldown = 0
   , foods = []
@@ -140,6 +140,6 @@ view model =
       , World.draw model.world model.window
       , Food.draw model.foods |> move (-x, -y)
       , Bullets.draw model.player.colors model.bullets |> move (-x, -y)
-      , Player.draw model.player model.mouse
+      , Player.draw model.player
       ]
         |> Element.toHtml

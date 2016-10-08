@@ -5,7 +5,6 @@ import Color exposing (Color)
 import List exposing (map, filterMap)
 import Vector exposing (..)
 import Player exposing (Player)
-import Ship
 
 type alias Bullet =
   { position : Vector
@@ -19,7 +18,7 @@ expire = 3
 
 fire : Player -> Vector -> List Bullet -> List Bullet
 fire player world bullets =
-  { position = Ship.front world player.rotation
+  { position = Player.front world player.rotation
   , velocity = player.velocity
   |> (<+>) (rotate player.rotation (0, 160))
   , expire = expire

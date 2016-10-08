@@ -1,16 +1,16 @@
-module Player exposing (Player, init, draw, tick)
+module Player exposing (Player, init, draw, tick, front)
 
-import Collage exposing (Form, defaultLine, segment, traced)
+import Collage exposing (..)
 import Color exposing (Color)
 import Random exposing (..)
 import Vector exposing (..)
 import Colors
-import Ship
 
 type alias Player =
   { position : Vector
   , velocity : Vector
   , rotation : Float
+  , radius : Float
   , colors : (Color, Color)
   }
 
@@ -33,13 +33,10 @@ tick timeDelta mouse player =
 
     velocity =
       (0, 150 * timeDelta)
-        |> rotate player.rotation
+        |> Vector.rotate player.rotation
         |> (*>) (distance player.position mouse |> min 100)
 
-    rotation =
-      mouse
-        |> calcRotation player.position
-        |> calcRotationStep timeDelta player.rotation
+    rotation = calcRotation player.position mouse
   in
     { player
     | velocity = velocity
@@ -55,20 +52,25 @@ calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
   atan2 (x' - x) (y' - y)
 
-calcRotationStep : Float -> Float -> Float -> Float
-calcRotationStep timeDelta old new =
+draw : Player ->  Form
+draw player =
   let
-    delta = new - old
-    delta' =
-      if delta > pi then delta - 2 * pi
-      else if delta < -pi then delta + 2 * pi
-      else delta
-    result = old + (delta' * 20 * timeDelta)
+    shape = circle player.radius
+    outline =
+      { defaultLine
+      | color = snd player.colors
+      , width = 7
+      , cap = Round
+      , join = Smooth
+      }
   in
-    if result > 2 * pi then result - 2 * pi
-    else if result < 0 then result + 2 * pi
-    else result
+    [ shape
+    |> filled (fst player.colors)
+    , shape
+    |> outlined outline
+    ]
+      |> group
 
-draw : Player -> (Float, Float) -> Form
-draw player mouse =
-  Ship.draw player.position player.rotation player.colors
+front : Vector -> Float -> Vector
+front position rotation =
+  position <+> (Vector.rotate rotation (0, 28))

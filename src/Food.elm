@@ -35,7 +35,7 @@ initFood : (Float, Float, Int) -> Food
 initFood (x, y, colorIndex) =
   { position = (x, y)
   , color = getColor colorIndex
-  , radius = 8
+  , radius = 10
   }
 
 tick : Float -> List Food -> List Food
@@ -50,10 +50,10 @@ draw = group << List.map drawFood
 
 drawFood : Food -> Form
 drawFood food =
-  [ circle food.radius
+  [ ngon 7 food.radius
   |> filled (fst food.color)
   |> move food.position
-  , circle food.radius
+  , ngon 7 food.radius
   |> outlined { defaultLine | color = (snd food.color), width = 3 }
   |> move food.position
   ]
