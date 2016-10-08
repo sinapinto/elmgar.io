@@ -29,7 +29,7 @@ bg : Color
 bg = rgb 242 251 255
 
 lightGray : Color
-lightGray = rgb 200 200 200
+lightGray = rgb 220 230 230
 
 pink : (Color, Color)
 pink = (rgb 232 5 153, rgb 215 6 142)

@@ -32,7 +32,7 @@ tick timeDelta mouse player =
     --     |> limitRadius 20
 
     velocity =
-      (0, 100 * timeDelta)
+      (0, 150 * timeDelta)
         |> rotate player.rotation
         |> (*>) (distance player.position mouse |> min 100)
 
@@ -63,7 +63,7 @@ calcRotationStep timeDelta old new =
       if delta > pi then delta - 2 * pi
       else if delta < -pi then delta + 2 * pi
       else delta
-    result = old + (delta' * 10 * timeDelta)
+    result = old + (delta' * 20 * timeDelta)
   in
     if result > 2 * pi then result - 2 * pi
     else if result < 0 then result + 2 * pi

@@ -17,24 +17,35 @@ tick timeDelta player world =
 draw : World -> Size -> Form
 draw world window =
   let
+    gap = 40
+
     (x, y) = world.position
+    horzOffset = ((floor y) % gap |> toFloat)
+    vertOffset = ((floor x) % gap |> toFloat)
 
-    gap = 50
-    hw = toFloat <| window.width // 2
-    hh = toFloat <| window.height // 2
-    (left, right) = (-hw, hw)
-    (bottom, top) = (-hh, hh)
+    halfWidth = window.width // 2 |> toFloat
+    halfHeight = window.height // 2 |> toFloat
+    (left, right) = (-halfWidth, halfWidth)
+    (bottom, top) = (-halfHeight, halfHeight)
 
-    drawHorzLine i =
-      path [(left, i * gap - hh), (right, i * gap - hh)]
-        |> traced (solid lightGray)
-    drawVertLine i =
-      path [(i * gap - hw, bottom), (i * gap - hw, top)]
-        |> traced (solid lightGray)
+    drawHorzLine index =
+      let i = toFloat index
+      in
+        path
+          [ (left, i * gap - halfHeight - horzOffset)
+          , (right, i * gap - halfHeight - horzOffset)
+          ]
+            |> traced (solid lightGray)
 
-    numHorzLines = toFloat <| window.height // gap
-    numVertLines = toFloat <| window.width // gap
+    drawVertLine index =
+      let i = toFloat index
+      in
+        path
+          [ (i * gap - halfWidth - vertOffset, bottom)
+          , (i * gap - halfWidth - vertOffset, top)
+          ]
+            |> traced (solid lightGray)
   in
-    map drawHorzLine [0..numHorzLines] ++
-    map drawVertLine [0..numVertLines]
+    map drawHorzLine [0..(window.height // gap)] ++
+    map drawVertLine [0..(window.width // gap)]
       |> group
