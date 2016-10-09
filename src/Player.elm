@@ -71,6 +71,6 @@ draw player =
     ]
       |> group
 
-front : Vector -> Float -> Vector
-front position rotation =
-  position <+> (Vector.rotate rotation (0, 28))
+front : Vector -> Float -> Float -> Vector
+front position rotation radius =
+  position <+> (Vector.rotate rotation (0, radius))
