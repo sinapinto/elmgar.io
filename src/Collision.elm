@@ -1,15 +1,21 @@
 module Collision exposing (collide)
 
-import List exposing (filter, any)
+import List exposing (filter, any, length)
 import Bullets exposing (Bullet)
 import Food exposing (Food)
 import Player exposing (Player)
 import World exposing (World)
 
-collide : World -> Player -> List Bullet -> List Food -> (List Bullet, List Food)
+collide : World -> Player -> List Bullet -> List Food -> (Player, List Bullet, List Food)
 collide world player bullets foods =
-  let foods' = filter (not << collidePlayerFood world player) foods
-  in (bullets, foods')
+  let
+    foods' = filter (not << collidePlayerFood world player) foods
+    player' =
+      if length foods' < length foods
+      then { player | radius = player.radius + 0.4 }
+      else player
+  in
+    (player', bullets, foods')
 
 collidePlayerFood : World -> Player -> Food -> Bool
 collidePlayerFood world player food =

@@ -22,7 +22,7 @@ fire player world bullets =
   , velocity = player.velocity
   |> (<+>) (rotate player.rotation (0, 160))
   , expire = expire
-  , radius = 5
+  , radius = 16
   } :: bullets
 
 
@@ -57,7 +57,7 @@ drawBullet (c1, c2) bullet =
   |> filled c1
   |> move bullet.position
   , circle bullet.radius
-  |> outlined { defaultLine | color = c2, width = 3 }
+  |> outlined { defaultLine | color = c2, width = 5 }
   |> move bullet.position
   ]
     |> group

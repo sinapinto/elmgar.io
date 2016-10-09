@@ -10,7 +10,7 @@ import Vector exposing (..)
 
 type alias Food =
   { position : Vector
-  , color : (Color, Color)
+  , color : Color
   , radius : Float
   }
 
@@ -26,7 +26,7 @@ init randomInt bounds =
         (float left right)
         (float bottom top)
         (int 0 Colors.max)
-        |> list 10
+        |> list 50
     (randoms, _) = step generator (initialSeed randomInt)
   in
     List.map initFood randoms
@@ -34,7 +34,7 @@ init randomInt bounds =
 initFood : (Float, Float, Int) -> Food
 initFood (x, y, colorIndex) =
   { position = (x, y)
-  , color = getColor colorIndex
+  , color = fst (getColor colorIndex)
   , radius = 10
   }
 
@@ -50,11 +50,6 @@ draw = group << List.map drawFood
 
 drawFood : Food -> Form
 drawFood food =
-  [ ngon 7 food.radius
-  |> filled (fst food.color)
-  |> move food.position
-  , ngon 7 food.radius
-  |> outlined { defaultLine | color = (snd food.color), width = 3 }
-  |> move food.position
-  ]
-    |> group
+  ngon 7 food.radius
+    |> filled food.color
+    |> move food.position

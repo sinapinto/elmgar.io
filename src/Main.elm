@@ -120,17 +120,18 @@ tick timeDelta model =
     bullets = Bullets.tick timeDelta model.bullets
     (bullets', fireCooldown) =
       if model.keys.w && model.fireCooldown == 0 then
-        (Bullets.fire model.player model.world.position bullets, 0.3)
+        (Bullets.fire model.player model.world.position bullets, 0.2)
       else
         (bullets, max 0 (model.fireCooldown - timeDelta))
-    (bullets'', foods') = collide world player bullets' foods
+    (player', bullets'', foods') = collide world player bullets' foods
   in
     { model
-    | player = player
+    | player = player'
     , bullets = bullets''
     , fireCooldown = fireCooldown
     , foods = foods'
     , world = world
+    , keys = { w = False, space = False }
     }
 
 view : Model -> Html Msg

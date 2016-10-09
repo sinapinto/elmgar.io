@@ -17,7 +17,7 @@ tick timeDelta player world =
 draw : World -> Size -> Form
 draw world window =
   let
-    gap = 40
+    gap = 38
 
     (x, y) = world.position
     horzOffset = ((floor y) % gap |> toFloat)
