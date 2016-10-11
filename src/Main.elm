@@ -1,6 +1,6 @@
 import Html exposing (..)
 import Html.App
-import Element
+import Element exposing (toHtml)
 import Collage exposing (..)
 import Time exposing (Time, inSeconds, inMilliseconds, now)
 import Task
@@ -13,7 +13,7 @@ import Player exposing (Player)
 import Food exposing (Food)
 import World exposing (World)
 import Keys exposing (Keys)
-import Colors exposing (bg)
+import Color exposing (white)
 import Collision exposing (collide)
 
 main : Program Never
@@ -45,7 +45,7 @@ init =
     , velocity = (0, 0)
     , rotation = 0
     , radius = 20
-    , colors = (bg, bg)
+    , colors = (white, white)
     }
   , bullets = []
   , fireCooldown = 0
@@ -131,22 +131,18 @@ tick timeDelta model =
     , fireCooldown = fireCooldown
     , foods = foods'
     , world = world
-    , keys = { w = False, space = False }
     }
 
 view : Model -> Html Msg
 view model =
   let
-    width = model.window.width
-    height = model.window.height
+    (width, height) = (model.window.width, model.window.height)
     (x, y) = model.world.position
   in
     collage width height
-      [ rect (toFloat width) (toFloat height)
-      |> filled bg
-      , World.draw model.world model.window
+      [ World.draw model.world model.window
       , Food.draw model.foods |> move (-x, -y)
       , Bullets.draw model.player.colors model.bullets |> move (-x, -y)
       , Player.draw model.player
       ]
-        |> Element.toHtml
+        |> toHtml

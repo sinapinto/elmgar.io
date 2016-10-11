@@ -2,7 +2,7 @@ module World exposing (World, tick, draw)
 
 import Collage exposing (..)
 import List exposing (map)
-import Colors exposing (lightGray)
+import Colors exposing (bg, lightGray)
 import Player exposing (Player)
 import Vector exposing (..)
 import Window exposing (Size)
@@ -18,13 +18,13 @@ draw : World -> Size -> Form
 draw world window =
   let
     gap = 38
-
+    (width, height) = (window.width, window.height)
     (x, y) = world.position
     horzOffset = ((floor y) % gap |> toFloat)
     vertOffset = ((floor x) % gap |> toFloat)
 
-    halfWidth = window.width // 2 |> toFloat
-    halfHeight = window.height // 2 |> toFloat
+    halfWidth = width // 2 |> toFloat
+    halfHeight = height // 2 |> toFloat
     (left, right) = (-halfWidth, halfWidth)
     (bottom, top) = (-halfHeight, halfHeight)
 
@@ -46,6 +46,7 @@ draw world window =
           ]
             |> traced (solid lightGray)
   in
-    map drawHorzLine [0..(window.height // gap)] ++
-    map drawVertLine [0..(window.width // gap)]
+    (rect (toFloat width) (toFloat height) |> filled bg) ::
+    map drawHorzLine [0..(height // gap)] ++
+    map drawVertLine [0..(width // gap)]
       |> group
