@@ -15,8 +15,7 @@ type alias Bullet =
 fire : Player -> Vector -> List Bullet -> List Bullet
 fire player world bullets =
   { position = Player.front world player.rotation player.radius
-  , velocity = 2 *> player.velocity
-  |> (<+>) (rotate player.rotation (0, 160))
+  , velocity = player.velocity <+> rotate player.rotation (0, 500)
   , radius = 16
   } :: bullets
 

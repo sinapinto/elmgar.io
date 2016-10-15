@@ -73,4 +73,4 @@ draw player =
 
 front : Vector -> Float -> Float -> Vector
 front position rotation radius =
-  position <+> (Vector.rotate rotation (0, radius))
+  position <+> (Vector.rotate rotation (0, radius * 1.7))
