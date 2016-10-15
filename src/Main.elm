@@ -44,7 +44,7 @@ init =
     { position = (0, 0)
     , velocity = (0, 0)
     , rotation = 0
-    , radius = 20
+    , radius = 50
     , colors = (white, white)
     }
   , bullets = []
@@ -118,15 +118,21 @@ tick timeDelta model =
     foods = Food.tick timeDelta model.foods
     player = Player.tick timeDelta model.mouse model.player
     bullets = Bullets.tick timeDelta model.bullets
-    (bullets', fireCooldown) =
-      if model.keys.w && model.fireCooldown == 0 then
-        (Bullets.fire model.player model.world.position bullets, 0.2)
+    (player', bullets', fireCooldown) =
+      if model.keys.w && model.fireCooldown == 0 && player.radius > 36 then
+        ( { player | radius = player.radius - 2 }
+        , Bullets.fire model.player model.world.position bullets
+        , 0.2
+        )
       else
-        (bullets, max 0 (model.fireCooldown - timeDelta))
-    (player', bullets'', foods') = collide world player bullets' foods
+        ( player
+        , bullets
+        , max 0 (model.fireCooldown - timeDelta)
+        )
+    (player'', bullets'', foods') = collide world player' bullets' foods
   in
     { model
-    | player = player'
+    | player = player''
     , bullets = bullets''
     , fireCooldown = fireCooldown
     , foods = foods'
