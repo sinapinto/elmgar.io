@@ -27,10 +27,6 @@ init randomInt player =
 tick : Float -> (Float, Float) -> Player -> Player
 tick timeDelta mouse player =
   let
-    -- position =
-    --   player.position <+> (timeDelta *> player.velocity)
-    --     |> limitRadius 20
-
     velocity =
       (0, 150 * timeDelta)
         |> Vector.rotate player.rotation
@@ -42,11 +38,6 @@ tick timeDelta mouse player =
     | velocity = velocity
     , rotation = rotation
     }
-
--- limitRadius : Float -> Vector -> Vector
--- limitRadius limit point =
---   let (r, t) = toPolar point
---   in fromPolar (min r limit, t)
 
 calcRotation : (Float, Float) -> (Float, Float) -> Float
 calcRotation (x, y) (x', y') =
@@ -73,4 +64,4 @@ draw player =
 
 front : Vector -> Float -> Float -> Vector
 front position rotation radius =
-  position <+> (Vector.rotate rotation (0, radius * 1.7))
+  position <+> Vector.rotate rotation (0, radius * 1.5)

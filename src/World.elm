@@ -20,33 +20,23 @@ draw world window =
     gap = 38
     (width, height) = (window.width, window.height)
     (x, y) = world.position
-    horzOffset = (floor y) % gap |> toFloat
-    vertOffset = (floor x) % gap |> toFloat
 
     halfWidth = width // 2 |> toFloat
     halfHeight = height // 2 |> toFloat
+
     (left, right) = (-halfWidth, halfWidth)
     (bottom, top) = (-halfHeight, halfHeight)
 
-    drawHorzLine index =
-      let i = toFloat index
-      in
-        path
-          [ (left, i * gap - halfHeight - horzOffset)
-          , (right, i * gap - halfHeight - horzOffset)
-          ]
-            |> traced (solid lightGray)
+    horzOffset = (floor y) % gap
+    vertOffset = (floor x) % gap
 
-    drawVertLine index =
-      let i = toFloat index
-      in
-        path
-          [ (i * gap - halfWidth - vertOffset, bottom)
-          , (i * gap - halfWidth - vertOffset, top)
-          ]
-            |> traced (solid lightGray)
+    drawHorzLine i = path [(left, i), (right, i)] |> traced (solid lightGray)
+    drawVertLine i = path [(i, bottom), (i, top)] |> traced (solid lightGray)
+
+    horzIndices = map (toFloat << \i -> i * gap - (height // 2) - horzOffset) [0..(height // gap + 1)]
+    vertIndices = map (toFloat << \i -> i * gap - (width // 2)  - vertOffset) [0..(width  // gap + 1)]
   in
     (rect (toFloat width) (toFloat height) |> filled bg) ::
-    map drawHorzLine [0..(height // gap + 1)] ++
-    map drawVertLine [0..(width // gap + 1)]
+    map drawHorzLine horzIndices ++
+    map drawVertLine vertIndices
       |> group

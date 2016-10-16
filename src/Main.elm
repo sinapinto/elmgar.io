@@ -147,8 +147,10 @@ view model =
   in
     collage width height
       [ World.draw model.world model.window
-      , Food.draw model.foods |> move (-x, -y)
-      , Bullets.draw model.player.colors model.bullets |> move (-x, -y)
+      , Food.draw model.foods
+      |> move (-x, -y)
+      , Bullets.draw model.player.colors model.bullets
+      |> move (-x, -y)
       , Player.draw model.player
       ]
         |> toHtml
