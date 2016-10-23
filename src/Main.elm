@@ -115,7 +115,6 @@ tick : Float -> Model -> Model
 tick timeDelta model =
   let
     world = World.tick timeDelta model.player model.world
-    foods = Food.tick timeDelta model.foods
     player = Player.tick timeDelta model.mouse model.player
     bullets = Bullets.tick timeDelta model.bullets
     (player', bullets', fireCooldown) =
@@ -129,13 +128,13 @@ tick timeDelta model =
         , bullets
         , max 0 (model.fireCooldown - timeDelta)
         )
-    (player'', bullets'', foods') = collide world player' bullets' foods
+    (player'', bullets'', foods) = collide world player' bullets' model.foods
   in
     { model
     | player = player''
     , bullets = bullets''
     , fireCooldown = fireCooldown
-    , foods = foods'
+    , foods = foods
     , world = world
     }
 

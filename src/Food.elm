@@ -1,4 +1,4 @@
-module Food exposing (Food, init, tick, draw)
+module Food exposing (Food, init, draw)
 
 import Collage exposing (..)
 import Colors exposing (..)
@@ -11,14 +11,13 @@ import Vector exposing (..)
 type alias Food =
   { position : Vector
   , color : Color
-  , radius : Float
   }
 
 init : Int -> Size -> List Food
 init randomInt bounds =
   let
-    (left, right) = (toFloat -bounds.width / 2, toFloat bounds.width / 2)
-    (bottom, top) = (toFloat -bounds.height / 2, toFloat bounds.height / 2)
+    (left, right) = (toFloat -bounds.width * 2, toFloat bounds.width * 2)
+    (bottom, top) = (toFloat -bounds.height * 2, toFloat bounds.height * 2)
 
     generator =
       map3
@@ -26,7 +25,7 @@ init randomInt bounds =
         (float left right)
         (float bottom top)
         (int 0 Colors.max)
-        |> list 50
+        |> list 500
     (randoms, _) = step generator (initialSeed randomInt)
   in
     List.map initFood randoms
@@ -35,21 +34,15 @@ initFood : (Float, Float, Int) -> Food
 initFood (x, y, colorIndex) =
   { position = (x, y)
   , color = fst (getColor colorIndex)
-  , radius = 10
   }
 
-tick : Float -> List Food -> List Food
-tick timeDelta = List.map (tickFood timeDelta)
-
-tickFood : Float -> Food -> Food
-tickFood timeDelta food =
-  food
-
 draw : List Food -> Form
-draw = group << List.map drawFood
+draw =
+  let shape = ngon 7 10
+  in group << List.map (drawFood shape)
 
-drawFood : Food -> Form
-drawFood food =
-  ngon 7 food.radius
+drawFood : Shape -> Food -> Form
+drawFood shape food =
+  shape
     |> filled food.color
     |> move food.position
