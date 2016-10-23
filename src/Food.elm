@@ -1,4 +1,4 @@
-module Food exposing (Food, init, draw)
+module Food exposing (Food, init, draw, radius)
 
 import Collage exposing (..)
 import Colors exposing (..)
@@ -12,6 +12,9 @@ type alias Food =
   { position : Vector
   , color : Color
   }
+
+radius : Float
+radius = 10
 
 init : Int -> Size -> List Food
 init randomInt bounds =
@@ -38,7 +41,7 @@ initFood (x, y, colorIndex) =
 
 draw : List Food -> Form
 draw =
-  let shape = ngon 7 10
+  let shape = ngon 7 radius
   in group << List.map (drawFood shape)
 
 drawFood : Shape -> Food -> Form

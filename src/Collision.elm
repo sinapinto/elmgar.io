@@ -25,11 +25,11 @@ collide world player bullets foods =
 
 collidePlayerFood : Vector -> Float -> Food -> Bool
 collidePlayerFood playerPosition playerRadius food =
-  intersectCircles playerPosition playerRadius food.position 10
+  intersectCircles playerPosition playerRadius food.position Food.radius
 
 collidePlayerBullet : Vector -> Float -> Bullet -> Bool
 collidePlayerBullet playerPosition playerRadius bullet =
-  intersectCircles playerPosition playerRadius bullet.position bullet.radius
+  intersectCircles playerPosition playerRadius bullet.position Bullets.radius
 
 intersectCircles : Vector -> Float -> Vector -> Float -> Bool
 intersectCircles (x1, y1) r1 (x2, y2) r2 =
