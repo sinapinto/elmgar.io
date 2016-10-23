@@ -1,7 +1,3 @@
-(WIP) a game written in Elm.
+an Agar.io simulation built with Elm
 
-to play, run
-  ```
-  elm package install
-  elm reactor
-  ```
+[demo](http://sinapinto.github.io/elmgar.io/)
