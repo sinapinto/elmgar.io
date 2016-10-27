@@ -12006,39 +12006,6 @@ var _sinapinto$no_fucking_dots$Player$Player = F5(
 	function (a, b, c, d, e) {
 		return {position: a, velocity: b, rotation: c, radius: d, colors: e};
 	});
-var _sinapinto$no_fucking_dots$Bullets$drawBullet = F2(
-	function (_p0, bullet) {
-		var _p1 = _p0;
-		return _evancz$elm_graphics$Collage$group(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_evancz$elm_graphics$Collage$move,
-					bullet.position,
-					A2(
-						_evancz$elm_graphics$Collage$filled,
-						_p1._0,
-						_evancz$elm_graphics$Collage$circle(bullet.radius))),
-					A2(
-					_evancz$elm_graphics$Collage$move,
-					bullet.position,
-					A2(
-						_evancz$elm_graphics$Collage$outlined,
-						_elm_lang$core$Native_Utils.update(
-							_evancz$elm_graphics$Collage$defaultLine,
-							{color: _p1._1, width: 5}),
-						_evancz$elm_graphics$Collage$circle(bullet.radius)))
-				]));
-	});
-var _sinapinto$no_fucking_dots$Bullets$draw = function (colors) {
-	return function (_p2) {
-		return _evancz$elm_graphics$Collage$group(
-			A2(
-				_elm_lang$core$List$map,
-				_sinapinto$no_fucking_dots$Bullets$drawBullet(colors),
-				_p2));
-	};
-};
 var _sinapinto$no_fucking_dots$Bullets$moveBullet = F2(
 	function (timeDelta, bullet) {
 		var velocity = (_elm_lang$core$Native_Utils.cmp(
@@ -12072,64 +12039,82 @@ var _sinapinto$no_fucking_dots$Bullets$fire = F3(
 					A2(
 						_sinapinto$no_fucking_dots$Vector$rotate,
 						player.rotation,
-						{ctor: '_Tuple2', _0: 0, _1: 500})),
-				radius: 16
+						{ctor: '_Tuple2', _0: 0, _1: 500}))
 			},
 			bullets);
 	});
-var _sinapinto$no_fucking_dots$Bullets$Bullet = F3(
-	function (a, b, c) {
-		return {position: a, velocity: b, radius: c};
+var _sinapinto$no_fucking_dots$Bullets$radius = 16;
+var _sinapinto$no_fucking_dots$Bullets$drawBullet = F2(
+	function (_p0, bullet) {
+		var _p1 = _p0;
+		return _evancz$elm_graphics$Collage$group(
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_evancz$elm_graphics$Collage$move,
+					bullet.position,
+					A2(
+						_evancz$elm_graphics$Collage$filled,
+						_p1._0,
+						_evancz$elm_graphics$Collage$circle(_sinapinto$no_fucking_dots$Bullets$radius))),
+					A2(
+					_evancz$elm_graphics$Collage$move,
+					bullet.position,
+					A2(
+						_evancz$elm_graphics$Collage$outlined,
+						_elm_lang$core$Native_Utils.update(
+							_evancz$elm_graphics$Collage$defaultLine,
+							{color: _p1._1, width: 5}),
+						_evancz$elm_graphics$Collage$circle(_sinapinto$no_fucking_dots$Bullets$radius)))
+				]));
 	});
-var _sinapinto$no_fucking_dots$Food$drawFood = function (food) {
-	return A2(
-		_evancz$elm_graphics$Collage$move,
-		food.position,
-		A2(
-			_evancz$elm_graphics$Collage$filled,
-			food.color,
-			A2(_evancz$elm_graphics$Collage$ngon, 7, food.radius)));
+var _sinapinto$no_fucking_dots$Bullets$draw = function (colors) {
+	return function (_p2) {
+		return _evancz$elm_graphics$Collage$group(
+			A2(
+				_elm_lang$core$List$map,
+				_sinapinto$no_fucking_dots$Bullets$drawBullet(colors),
+				_p2));
+	};
 };
-var _sinapinto$no_fucking_dots$Food$draw = function (_p0) {
-	return _evancz$elm_graphics$Collage$group(
-		A2(_elm_lang$core$List$map, _sinapinto$no_fucking_dots$Food$drawFood, _p0));
-};
-var _sinapinto$no_fucking_dots$Food$tickFood = F2(
-	function (timeDelta, food) {
-		return food;
+var _sinapinto$no_fucking_dots$Bullets$Bullet = F2(
+	function (a, b) {
+		return {position: a, velocity: b};
 	});
-var _sinapinto$no_fucking_dots$Food$tick = function (timeDelta) {
-	return _elm_lang$core$List$map(
-		_sinapinto$no_fucking_dots$Food$tickFood(timeDelta));
-};
-var _sinapinto$no_fucking_dots$Food$initFood = function (_p1) {
-	var _p2 = _p1;
+var _sinapinto$no_fucking_dots$Food$drawFood = F2(
+	function (shape, food) {
+		return A2(
+			_evancz$elm_graphics$Collage$move,
+			food.position,
+			A2(_evancz$elm_graphics$Collage$filled, food.color, shape));
+	});
+var _sinapinto$no_fucking_dots$Food$initFood = function (_p0) {
+	var _p1 = _p0;
 	return {
-		position: {ctor: '_Tuple2', _0: _p2._0, _1: _p2._1},
+		position: {ctor: '_Tuple2', _0: _p1._0, _1: _p1._1},
 		color: _elm_lang$core$Basics$fst(
-			_sinapinto$no_fucking_dots$Colors$getColor(_p2._2)),
-		radius: 10
+			_sinapinto$no_fucking_dots$Colors$getColor(_p1._2))
 	};
 };
 var _sinapinto$no_fucking_dots$Food$init = F2(
 	function (randomInt, bounds) {
+		var _p2 = {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Basics$toFloat(0 - bounds.height) * 2,
+			_1: _elm_lang$core$Basics$toFloat(bounds.height) * 2
+		};
+		var bottom = _p2._0;
+		var top = _p2._1;
 		var _p3 = {
 			ctor: '_Tuple2',
-			_0: _elm_lang$core$Basics$toFloat(0 - bounds.height) / 2,
-			_1: _elm_lang$core$Basics$toFloat(bounds.height) / 2
+			_0: _elm_lang$core$Basics$toFloat(0 - bounds.width) * 2,
+			_1: _elm_lang$core$Basics$toFloat(bounds.width) * 2
 		};
-		var bottom = _p3._0;
-		var top = _p3._1;
-		var _p4 = {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Basics$toFloat(0 - bounds.width) / 2,
-			_1: _elm_lang$core$Basics$toFloat(bounds.width) / 2
-		};
-		var left = _p4._0;
-		var right = _p4._1;
+		var left = _p3._0;
+		var right = _p3._1;
 		var generator = A2(
 			_elm_lang$core$Random$list,
-			50,
+			500,
 			A4(
 				_elm_lang$core$Random$map3,
 				F3(
@@ -12139,16 +12124,27 @@ var _sinapinto$no_fucking_dots$Food$init = F2(
 				A2(_elm_lang$core$Random$float, left, right),
 				A2(_elm_lang$core$Random$float, bottom, top),
 				A2(_elm_lang$core$Random$int, 0, _sinapinto$no_fucking_dots$Colors$max)));
-		var _p5 = A2(
+		var _p4 = A2(
 			_elm_lang$core$Random$step,
 			generator,
 			_elm_lang$core$Random$initialSeed(randomInt));
-		var randoms = _p5._0;
+		var randoms = _p4._0;
 		return A2(_elm_lang$core$List$map, _sinapinto$no_fucking_dots$Food$initFood, randoms);
 	});
-var _sinapinto$no_fucking_dots$Food$Food = F3(
-	function (a, b, c) {
-		return {position: a, color: b, radius: c};
+var _sinapinto$no_fucking_dots$Food$radius = 10;
+var _sinapinto$no_fucking_dots$Food$draw = function () {
+	var shape = A2(_evancz$elm_graphics$Collage$ngon, 7, _sinapinto$no_fucking_dots$Food$radius);
+	return function (_p5) {
+		return _evancz$elm_graphics$Collage$group(
+			A2(
+				_elm_lang$core$List$map,
+				_sinapinto$no_fucking_dots$Food$drawFood(shape),
+				_p5));
+	};
+}();
+var _sinapinto$no_fucking_dots$Food$Food = F2(
+	function (a, b) {
+		return {position: a, color: b};
 	});
 var _sinapinto$no_fucking_dots$World$draw = F2(
 	function (world, window) {
@@ -12252,11 +12248,11 @@ var _sinapinto$no_fucking_dots$Collision$intersectCircles = F4(
 	});
 var _sinapinto$no_fucking_dots$Collision$collidePlayerBullet = F3(
 	function (playerPosition, playerRadius, bullet) {
-		return A4(_sinapinto$no_fucking_dots$Collision$intersectCircles, playerPosition, playerRadius, bullet.position, bullet.radius);
+		return A4(_sinapinto$no_fucking_dots$Collision$intersectCircles, playerPosition, playerRadius, bullet.position, _sinapinto$no_fucking_dots$Bullets$radius);
 	});
 var _sinapinto$no_fucking_dots$Collision$collidePlayerFood = F3(
 	function (playerPosition, playerRadius, food) {
-		return A4(_sinapinto$no_fucking_dots$Collision$intersectCircles, playerPosition, playerRadius, food.position, food.radius);
+		return A4(_sinapinto$no_fucking_dots$Collision$intersectCircles, playerPosition, playerRadius, food.position, _sinapinto$no_fucking_dots$Food$radius);
 	});
 var _sinapinto$no_fucking_dots$Collision$collide = F4(
 	function (world, player, bullets, foods) {
@@ -12360,15 +12356,14 @@ var _sinapinto$no_fucking_dots$Main$tick = F2(
 		var player$ = _p2._0;
 		var bullets$ = _p2._1;
 		var fireCooldown = _p2._2;
-		var foods = A2(_sinapinto$no_fucking_dots$Food$tick, timeDelta, model.foods);
 		var world = A3(_sinapinto$no_fucking_dots$World$tick, timeDelta, model.player, model.world);
-		var _p3 = A4(_sinapinto$no_fucking_dots$Collision$collide, world, player$, bullets$, foods);
+		var _p3 = A4(_sinapinto$no_fucking_dots$Collision$collide, world, player$, bullets$, model.foods);
 		var player$$ = _p3._0;
 		var bullets$$ = _p3._1;
-		var foods$ = _p3._2;
+		var foods = _p3._2;
 		return _elm_lang$core$Native_Utils.update(
 			model,
-			{player: player$$, bullets: bullets$$, fireCooldown: fireCooldown, foods: foods$, world: world});
+			{player: player$$, bullets: bullets$$, fireCooldown: fireCooldown, foods: foods, world: world});
 	});
 var _sinapinto$no_fucking_dots$Main$update = F2(
 	function (msg, model) {
