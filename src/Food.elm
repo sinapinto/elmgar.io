@@ -19,8 +19,8 @@ radius = 10
 init : Int -> Size -> List Food
 init randomInt bounds =
   let
-    (left, right) = (toFloat -bounds.width * 2, toFloat bounds.width * 2)
-    (bottom, top) = (toFloat -bounds.height * 2, toFloat bounds.height * 2)
+    (left, right) = (toFloat -bounds.width * 1.5, toFloat bounds.width * 1.5)
+    (bottom, top) = (toFloat -bounds.height * 1.5, toFloat bounds.height * 1.5)
 
     generator =
       map3
@@ -28,7 +28,7 @@ init randomInt bounds =
         (float left right)
         (float bottom top)
         (int 0 Colors.max)
-        |> list 500
+        |> list 300
     (randoms, _) = step generator (initialSeed randomInt)
   in
     List.map initFood randoms
